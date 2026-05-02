@@ -4,8 +4,4 @@ import { vox } from "../../src";
 
 vox();
 
-createRoot(document.querySelector("#app")!).render(
-  <StrictMode>
-    
-  </StrictMode>,
-);
+createRoot(document.querySelector("#app")!).render(<StrictMode></StrictMode>);
