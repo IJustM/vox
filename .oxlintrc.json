@@ -9,7 +9,12 @@
     "style": "warn"
   },
   "rules": {
-    "func-style": ["error", "declaration"]
+    "func-style": ["error", "declaration"],
+    "no-ternary": "off",
+    "sort-imports": "off",
+    "id-length": "off",
+    "no-magic-numbers": "off",
+    "max-lines-per-function": "off"
   },
   "env": {
     "builtin": true
