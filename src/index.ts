@@ -1,1 +1,1 @@
-export { vox } from "./vox";
+export { createVoxBulder } from "./vox";

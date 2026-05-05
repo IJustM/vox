@@ -1,7 +1,9 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { vox } from "../../src";
+import { App } from "./app";
 
-vox();
-
-createRoot(document.querySelector("#app")!).render(<StrictMode></StrictMode>);
+createRoot(document.querySelector("#app")!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+);
