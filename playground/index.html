@@ -3,10 +3,34 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>vox</title>
+    <title>vox — type-safe localization for React</title>
+    <meta
+      name="description"
+      content="Type-safe localization for React interfaces: translation chains, per-language helpers, explicit fallbacks and an external language store."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <meta property="og:title" content="vox — type-safe localization for React" />
+    <meta
+      property="og:description"
+      content="Translation chains enforced by types, per-language helpers, explicit fallbacks and a language store that lives outside React."
+    />
+    <meta property="og:type" content="website" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%236d5cf6'/%3E%3Ctext x='16' y='23' font-family='ui-sans-serif,system-ui,sans-serif' font-size='19' font-weight='700' fill='white' text-anchor='middle'%3Ev%3C/text%3E%3C/svg%3E"
+    />
+    <script>
+      (() => {
+        const stored = localStorage.getItem("vox-theme");
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const isDark = stored === null ? prefersDark : stored === "dark";
+
+        document.documentElement.classList.toggle("dark", isDark);
+      })();
+    </script>
   </head>
   <body>
     <div id="app"></div>
-    <script type="module" src="/src/index.tsx"></script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -1,6 +1,11 @@
 import { createVoxBuilder } from "../../src";
 
-export const { vox, useVox, useLanguage, setLanguage } = createVoxBuilder()
+export const { vox, useVox, useLanguage, setLanguage, getLanguage, subscribe } = createVoxBuilder()
+  .add("en", {
+    helpers: {
+      plural: (count: number, one: string, several: string) => (count === 1 ? one : several),
+    },
+  })
   .add("ru", {
     helpers: {
       // oxlint-disable-next-line max-params
@@ -31,12 +36,7 @@ export const { vox, useVox, useLanguage, setLanguage } = createVoxBuilder()
       },
     },
   })
-  .add("en", {
-    helpers: {
-      plural: (count: number, one: string, several: string) => (count === 1 ? one : several),
-    },
-  })
   .add("zh")
   .init({
-    defaultFallbackLanguage: "ru",
+    defaultFallbackLanguage: "en",
   });

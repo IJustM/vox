@@ -4,6 +4,8 @@
 
 Type-safe localization for React interfaces. A phrase is built with tagged templates — one per language — and rendered by a hook against an external language store.
 
+**[Documentation and live playground →](https://ijustm.github.io/vox/)**
+
 ```tsx
 const { vox, useVox } = createVoxBuilder().add("en").add("ru").init();
 
@@ -225,14 +227,20 @@ Returns a builder.
 
 ## Development
 
+The `playground/` app is both the live playground and the documentation site — every demo it
+renders is a real component, and every snippet is imported straight from its source file.
+
 ```sh
 pnpm install
-pnpm play        # playground app (vite, root: playground)
-pnpm test        # browser tests (vitest + playwright)
-pnpm typecheck   # tsc --noEmit
-pnpm lint        # oxlint
-pnpm fmt         # oxfmt
-pnpm build       # tsdown -> dist
+pnpm play            # docs site + live playground (vite)
+pnpm test            # browser tests of the library and the site (vitest + playwright)
+pnpm typecheck       # types of the library
+pnpm typecheck:site  # types of the docs site, its demos and snippets
+pnpm lint            # oxlint
+pnpm fmt             # oxfmt
+pnpm build           # library bundle (tsdown -> dist)
+pnpm site:build      # static site for GitHub Pages (playground/dist)
+pnpm site:preview    # serve the built site locally
 ```
 
 Browser tests run in Chromium through Playwright. Download the browser build pinned by the installed Playwright version once:
@@ -240,6 +248,11 @@ Browser tests run in Chromium through Playwright. Download the browser build pin
 ```sh
 pnpm exec playwright install chromium
 ```
+
+The site is deployed to [ijustm.github.io/vox](https://ijustm.github.io/vox/) by the
+`Deploy site` workflow on every push to `main` (it needs **Settings → Pages → Source: GitHub
+Actions** once). The build is served from a sub-path, so `pnpm site:build` uses a `/vox/` base —
+override it with `SITE_BASE` when you deploy somewhere else.
 
 ## License
 

@@ -37,8 +37,14 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
+      - name: Typecheck the docs site
+        run: pnpm typecheck:site
+
       - name: Build
         run: pnpm build
+
+      - name: Build the docs site
+        run: pnpm site:build
 
   tests:
     name: Browser tests
