@@ -40,7 +40,7 @@ type Translate<
     Language
   >;
 } & {
-  fallback: (fallbackLanguage: Exclude<AllLanguages, Languages>) => VoxPhrase;
+  fallback: (fallbackLanguage?: Exclude<AllLanguages, Languages>) => VoxPhrase;
 };
 
 interface VoxInitOptions<Language extends string> {
