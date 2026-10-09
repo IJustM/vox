@@ -1,6 +1,6 @@
-import { createVoxBulder } from "../../src";
+import { createVoxBuilder } from "../../src";
 
-export const { vox, useVox } = createVoxBulder()
+export const { vox, useVox, useLanguage, setLanguage } = createVoxBuilder()
   .add("ru", {
     helpers: {
       // oxlint-disable-next-line max-params
@@ -33,11 +33,10 @@ export const { vox, useVox } = createVoxBulder()
   })
   .add("en", {
     helpers: {
-      plural: (count: number, one: string, several: string) =>
-        count === 1 ? one : several,
+      plural: (count: number, one: string, several: string) => (count === 1 ? one : several),
     },
   })
-  .add("jp")
+  .add("zh")
   .init({
     defaultFallbackLanguage: "ru",
   });

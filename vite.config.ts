@@ -6,7 +6,6 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  root: "./playground",
   test: {
     browser: {
       enabled: true,
@@ -14,6 +13,7 @@ export default defineConfig({
       instances: [{ browser: "chromium" }],
       provider: playwright(),
     },
+    include: ["src/**/*.test.{ts,tsx}"],
     root: ".",
   },
 });

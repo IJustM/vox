@@ -1,1 +1,13 @@
-export { createVoxBulder } from "./vox";
+export { createVoxBuilder } from "./vox";
+
+export type {
+  LanguageOptions,
+  Translate,
+  TranslateFunction,
+  TranslateTemplateFunction,
+  VoxBuilder,
+  VoxInitOptions,
+  VoxInstance,
+  VoxLanguageStore,
+  VoxPhrase,
+} from "./types";
