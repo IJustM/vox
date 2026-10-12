@@ -13,19 +13,19 @@ const ANY = "any";
 
 /** Цепочка перевода: тэг-функции оставшихся языков и `fallback`. */
 type TranslateChain = {
-  fallback(fallbackLanguage?: string): VoxPhrase;
+  fallback: (fallbackLanguage?: string) => VoxPhrase;
 } & Record<string, unknown>;
 
 /** Рантайм-описание инстанса до подстановки generic-типов. */
 interface VoxRuntimeInstance extends VoxLanguageStore<string> {
   vox: TranslateChain;
-  useLanguage(): [string, (language: string) => void];
-  useVox(): { language: string; t(phrase: VoxPhrase): ReactNode };
+  useLanguage: () => [string, (language: string) => void];
+  useVox: () => { language: string; t: (phrase: VoxPhrase) => ReactNode };
 }
 
 interface VoxRuntimeBuilder {
-  add(language: string, options?: LanguageOptions): VoxRuntimeBuilder;
-  init(options?: VoxInitOptions<string>): VoxRuntimeInstance;
+  add: (language: string, options?: LanguageOptions) => VoxRuntimeBuilder;
+  init: (options?: VoxInitOptions<string>) => VoxRuntimeInstance;
 }
 
 function createChain(
@@ -127,12 +127,8 @@ export function createVoxBuilder(): VoxBuilder {
       return [language, languageStore.setLanguage];
     }
 
-    function useVox(): { language: string; t(phrase: VoxPhrase): ReactNode } {
-      const language = useSyncExternalStore(
-        languageStore.subscribe,
-        languageStore.getLanguage,
-        languageStore.getLanguage,
-      );
+    function useVox(): { language: string; t: (phrase: VoxPhrase) => ReactNode } {
+      const [language] = useLanguage();
 
       const t = useCallback(
         (phrase: VoxPhrase): ReactNode => translate(phrase, language),

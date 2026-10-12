@@ -14,7 +14,9 @@
     "sort-imports": "off",
     "id-length": "off",
     "no-magic-numbers": "off",
-    "max-lines-per-function": "off"
+    "max-lines-per-function": "off",
+    "one-var": "off",
+    "typescript/method-signature-style": ["error", "property"]
   },
   "env": {
     "builtin": true

@@ -44,9 +44,9 @@ export interface VoxInitOptions<Language extends string> {
  * `subscribe` возвращает функцию отписки.
  */
 export interface VoxLanguageStore<Language extends string> {
-  getLanguage(): Language;
-  setLanguage(language: Language): void;
-  subscribe(listener: () => void): () => void;
+  getLanguage: () => Language;
+  setLanguage: (language: Language) => void;
+  subscribe: (listener: () => void) => () => void;
 }
 
 export interface VoxInstance<
@@ -57,26 +57,28 @@ export interface VoxInstance<
     any: TranslateFunction<never, never, never, never>;
   };
 
-  useVox(): {
-    t(phrase: VoxPhrase): ReactNode;
+  useVox: () => {
+    t: (phrase: VoxPhrase) => ReactNode;
     language: Languages;
   };
 
-  useLanguage(): [Languages, (language: Languages) => void];
+  useLanguage: () => [Languages, (language: Languages) => void];
 }
 
 export interface VoxBuilder<
   LanguagesOptions extends Record<string, LanguageOptions> = Record<string, never>,
   Languages extends string = never,
 > {
-  add<Language extends string>(
-    language: Language,
-  ): VoxBuilder<LanguagesOptions & Record<Language, never>, Languages | Language>;
+  add: {
+    <Language extends string>(
+      language: Language,
+    ): VoxBuilder<LanguagesOptions & Record<Language, never>, Languages | Language>;
 
-  add<Language extends string, Options extends LanguageOptions>(
-    language: Language,
-    options: Options,
-  ): VoxBuilder<LanguagesOptions & Record<Language, Options>, Languages | Language>;
+    <Language extends string, Options extends LanguageOptions>(
+      language: Language,
+      options: Options,
+    ): VoxBuilder<LanguagesOptions & Record<Language, Options>, Languages | Language>;
+  };
 
-  init(options?: VoxInitOptions<Languages>): VoxInstance<Languages, LanguagesOptions>;
+  init: (options?: VoxInitOptions<Languages>) => VoxInstance<Languages, LanguagesOptions>;
 }

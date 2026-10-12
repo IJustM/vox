@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import { render, renderHook } from "vitest-browser-react";
-import { createVoxBuilder } from "./index";
+import { createVoxBuilder } from "../index";
 
 const COUNT = 3;
 
@@ -29,6 +29,7 @@ function createVox() {
 
 test("рендерит перевод текущего языка и переключается через стор", async () => {
   const { vox, useVox, setLanguage } = createVox();
+
   const { result, act } = await renderHook(() => useVox());
 
   const phrase = vox.ru`Заголовок`.en`Title`.zh`标题`;
