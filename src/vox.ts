@@ -1,5 +1,11 @@
-import { useCallback, useSyncExternalStore, type ReactNode } from "react";
-import { Phrase, renderPhrase, type VoxInterpolation, type VoxVariant } from "./phrase";
+import { useMemo, useSyncExternalStore } from "react";
+import {
+  Phrase,
+  renderPhrase,
+  renderVariant,
+  type VoxInterpolation,
+  type VoxVariant,
+} from "./phrase";
 import { createLanguageStore } from "./store";
 import type {
   LanguageOptions,
@@ -11,16 +17,28 @@ import type {
 
 const ANY = "any";
 
+/** Чем закрывается цепочка: готовой фразой (`phrase`) или отрендеренным текстом (`vox`). */
+type FinishChain = (
+  variants: ReadonlyMap<string, VoxVariant>,
+  fallbackLanguage?: string,
+) => unknown;
+
 /** Цепочка перевода: тэг-функции оставшихся языков и `fallback`. */
 type TranslateChain = {
-  fallback: (fallbackLanguage?: string) => VoxPhrase;
+  fallback: (fallbackLanguage?: string) => unknown;
 } & Record<string, unknown>;
+
+/** Локализатор: вызывается фразой и несёт на себе такую же цепочку языков. */
+type Localizer = ((phrase: VoxPhrase) => string) &
+  TranslateChain & {
+    any: (template: TemplateStringsArray, ...values: VoxInterpolation[]) => string;
+  };
 
 /** Рантайм-описание инстанса до подстановки generic-типов. */
 interface VoxRuntimeInstance extends VoxLanguageStore<string> {
-  vox: TranslateChain;
+  phrase: TranslateChain;
   useLanguage: () => [string, (language: string) => void];
-  useVox: () => { language: string; t: (phrase: VoxPhrase) => ReactNode };
+  useVox: () => { language: string; vox: Localizer };
 }
 
 interface VoxRuntimeBuilder {
@@ -31,16 +49,11 @@ interface VoxRuntimeBuilder {
 function createChain(
   variants: ReadonlyMap<string, VoxVariant>,
   remaining: readonly string[],
-  defaultFallbackLanguage: string | undefined,
+  finish: FinishChain,
 ): TranslateChain {
   const chain: TranslateChain = {
-    fallback(fallbackLanguage?: string): VoxPhrase {
-      return new Phrase({
-        defaultFallbackLanguage,
-        fallbackLanguage,
-        languageAgnosticVariant: undefined,
-        variants,
-      });
+    fallback(fallbackLanguage?: string): unknown {
+      return finish(variants, fallbackLanguage);
     },
   };
 
@@ -48,24 +61,19 @@ function createChain(
     chain[language] = function translateTemplate(
       template: TemplateStringsArray,
       ...values: VoxInterpolation[]
-    ): Phrase | TranslateChain {
+    ): unknown {
       const nextVariants = new Map<string, VoxVariant>([
         ...variants,
         [language, createVariant(template, values)],
       ]);
       const rest = remaining.filter((item) => item !== language);
 
-      // Все языки переведены — цепочка закрывается готовой фразой.
+      // Все языки переведены — цепочка закрывается результатом.
       if (rest.length === 0) {
-        return new Phrase({
-          defaultFallbackLanguage,
-          fallbackLanguage: undefined,
-          languageAgnosticVariant: undefined,
-          variants: nextVariants,
-        });
+        return finish(nextVariants);
       }
 
-      return createChain(nextVariants, rest, defaultFallbackLanguage);
+      return createChain(nextVariants, rest, finish);
     };
   }
 
@@ -80,10 +88,10 @@ export function createVoxBuilder(): VoxBuilder {
     return languagesOptions.get(language)?.helpers ?? {};
   }
 
-  function translate(phrase: VoxPhrase, language: string): string {
+  function localize(phrase: VoxPhrase, language: string): string {
     if (!isVoxPhrase(phrase)) {
       throw new TypeError(
-        "[vox] t() expects a phrase built with a vox template, for example t(vox.ru`Text`).",
+        "[vox] vox() expects a phrase. Use vox(phrase.en`Text`) or translate in place: vox.en`Text`.ru`Текст`.",
       );
     }
 
@@ -102,8 +110,21 @@ export function createVoxBuilder(): VoxBuilder {
       );
     store = languageStore;
 
-    const vox: TranslateChain = {
-      ...createChain(new Map<string, VoxVariant>(), languages, defaultFallbackLanguage),
+    /** Закрывает цепочку готовой фразой. */
+    function finishPhrase(
+      variants: ReadonlyMap<string, VoxVariant>,
+      fallbackLanguage: string | undefined,
+    ): Phrase {
+      return new Phrase({
+        defaultFallbackLanguage,
+        fallbackLanguage,
+        languageAgnosticVariant: undefined,
+        variants,
+      });
+    }
+
+    const phrase: TranslateChain = {
+      ...createChain(new Map<string, VoxVariant>(), languages, finishPhrase),
       [ANY]: function translateAny(
         template: TemplateStringsArray,
         ...values: VoxInterpolation[]
@@ -117,6 +138,32 @@ export function createVoxBuilder(): VoxBuilder {
       },
     };
 
+    /**
+     * `vox` из `useVox()`: та же цепочка, что у `phrase`, но завершённая цепочка
+     * сразу рендерится в языке этого рендера.
+     */
+    function createLocalizer(language: string): Localizer {
+      function vox(input: VoxPhrase): string {
+        return localize(input, language);
+      }
+
+      function render(
+        variants: ReadonlyMap<string, VoxVariant>,
+        fallbackLanguage?: string,
+      ): string {
+        return renderPhrase(finishPhrase(variants, fallbackLanguage), language, getHelpers);
+      }
+
+      return Object.assign(vox, createChain(new Map<string, VoxVariant>(), languages, render), {
+        [ANY]: function translateAny(
+          template: TemplateStringsArray,
+          ...values: VoxInterpolation[]
+        ): string {
+          return renderVariant(createVariant(template, values), getHelpers(language));
+        },
+      });
+    }
+
     function useLanguage(): [string, (language: string) => void] {
       const language = useSyncExternalStore(
         languageStore.subscribe,
@@ -127,24 +174,20 @@ export function createVoxBuilder(): VoxBuilder {
       return [language, languageStore.setLanguage];
     }
 
-    function useVox(): { language: string; t: (phrase: VoxPhrase) => ReactNode } {
+    function useVox(): { language: string; vox: Localizer } {
       const [language] = useLanguage();
+      const vox = useMemo(() => createLocalizer(language), [language]);
 
-      const t = useCallback(
-        (phrase: VoxPhrase): ReactNode => translate(phrase, language),
-        [language],
-      );
-
-      return { language, t };
+      return { language, vox };
     }
 
     return {
       getLanguage: languageStore.getLanguage,
+      phrase,
       setLanguage: languageStore.setLanguage,
       subscribe: languageStore.subscribe,
       useLanguage,
       useVox,
-      vox,
     };
   }
 

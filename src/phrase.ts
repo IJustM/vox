@@ -21,7 +21,7 @@ export interface PhraseOptions {
   readonly fallbackLanguage: string | undefined;
   /** Язык из `init({ defaultFallbackLanguage })`. */
   readonly defaultFallbackLanguage: string | undefined;
-  /** Вариант для `vox.any`, не привязанный к языку. */
+  /** Вариант для `phrase.any`, не привязанный к языку. */
   readonly languageAgnosticVariant: VoxVariant | undefined;
 }
 
@@ -31,8 +31,8 @@ export interface ResolvedVariant {
 }
 
 /**
- * Неизменяемая фраза: собирается цепочкой `vox.ru`...`.en`... и рендерится
- * хуком `t` в текущем языке. Один экземпляр можно рендерить в разных языках.
+ * Неизменяемая фраза: собирается цепочкой `phrase.ru`...`.en`... и рендерится
+ * функцией `vox` в текущем языке. Один экземпляр можно рендерить в разных языках.
  */
 export class Phrase implements VoxPhrase {
   // oxlint-disable-next-line no-underscore-dangle
@@ -47,7 +47,7 @@ export class Phrase implements VoxPhrase {
   /**
    * Выбирает вариант под текущий язык в порядке приоритета:
    * запрошенный язык → `.fallback(language)` → `defaultFallbackLanguage` →
-   * `vox.any` → единственный (первый) доступный вариант.
+   * `phrase.any` → единственный (первый) доступный вариант.
    */
   resolve(language: string): ResolvedVariant | undefined {
     const { variants, fallbackLanguage, defaultFallbackLanguage, languageAgnosticVariant } =
@@ -114,7 +114,7 @@ function resolveFirstVariant(
   return undefined;
 }
 
-function renderVariant(variant: VoxVariant, helpers: Record<string, unknown>): string {
+export function renderVariant(variant: VoxVariant, helpers: Record<string, unknown>): string {
   let text = "";
 
   for (const [index, chunk] of variant.strings.entries()) {

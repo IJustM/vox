@@ -5,6 +5,7 @@ import {
   Languages,
   Package,
   ShieldCheck,
+  Zap,
   type LucideIcon,
 } from "lucide-react";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -36,9 +37,15 @@ const FEATURES: readonly Feature[] = [
   },
   {
     description:
-      "vox.any renders the same text in every language — for brand names, product names and codes that should never be translated.",
+      "phrase.any renders the same text in every language — for brand names, product names and codes that should never be translated.",
     icon: Hash,
     title: "Language-agnostic phrases",
+  },
+  {
+    description:
+      "The localizer mirrors the phrase chain, so a translation can be built and rendered in place: vox.en`Hello`.ru`Привет`. No intermediate value to name.",
+    icon: Zap,
+    title: "Translate in place",
   },
   {
     description:

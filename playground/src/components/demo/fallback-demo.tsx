@@ -1,20 +1,20 @@
-import { useVox, vox } from "@/i18n";
+import { phrase, useVox } from "@/i18n";
 
 export function FallbackDemo() {
-  const { t } = useVox();
-  const defaultFallback = vox.en`Text`.ru`Текст`.fallback();
-  const pinnedFallback = vox.en`Text`.ru`Текст`.fallback("ru");
+  const { vox } = useVox();
+  const defaultFallback = phrase.en`Text`.ru`Текст`.fallback();
+  const pinnedFallback = phrase.en`Text`.ru`Текст`.fallback("ru");
 
   return (
     <div className="space-y-4">
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="rounded-lg border border-border bg-code/50 p-3">
           <p className="font-mono text-xs text-muted-foreground">.fallback()</p>
-          <p className="mt-1 text-lg">{t(defaultFallback)}</p>
+          <p className="mt-1 text-lg">{vox(defaultFallback)}</p>
         </div>
         <div className="rounded-lg border border-border bg-code/50 p-3">
           <p className="font-mono text-xs text-muted-foreground">.fallback("ru")</p>
-          <p className="mt-1 text-lg">{t(pinnedFallback)}</p>
+          <p className="mt-1 text-lg">{vox(pinnedFallback)}</p>
         </div>
       </div>
       <p className="text-xs text-muted-foreground">

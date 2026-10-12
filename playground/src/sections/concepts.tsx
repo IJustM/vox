@@ -18,7 +18,7 @@ const RESOLUTION_STEPS = [
     <InlineCode>init()</InlineCode>
   </>,
   <>
-    the <InlineCode>vox.any</InlineCode> variant
+    the <InlineCode>phrase.any</InlineCode> variant
   </>,
   "the first variant present in the phrase",
 ];
@@ -31,9 +31,16 @@ export function Concepts() {
         <Prose>
           <p>
             A chain is finished when every registered language is covered — then it collapses into a{" "}
-            <InlineCode>VoxPhrase</InlineCode>, the only thing <InlineCode>t()</InlineCode> accepts.
+            <InlineCode>VoxPhrase</InlineCode>, the data <InlineCode>vox()</InlineCode> renders.
             Leave a language out and the value stays a chain, which the type system refuses to pass
-            to <InlineCode>t()</InlineCode>.
+            to <InlineCode>vox()</InlineCode>.
+          </p>
+          <p>
+            The localizer from <InlineCode>useVox()</InlineCode> mirrors that chain, except the
+            terminal is the render itself: <InlineCode>vox.en`Hello`.ru`Привет`</InlineCode> is a{" "}
+            <InlineCode>ReactNode</InlineCode> in the current language. Use it for text that belongs
+            to one component, and <InlineCode>phrase</InlineCode> for translations you want to name
+            and reuse.
           </p>
           <p>
             Phrases are immutable data, so they can live at module scope and be rendered later in

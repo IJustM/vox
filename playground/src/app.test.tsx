@@ -30,5 +30,5 @@ test("renders the highlighted source behind every demo", async () => {
 
   expect(highlighted).not.toBeNull();
   expect(highlighted?.getAttribute("style")).toContain("--shiki-dark");
-  expect(highlighted?.textContent).toContain("vox.en");
+  expect(highlighted?.textContent).toContain("phrase.en");
 });

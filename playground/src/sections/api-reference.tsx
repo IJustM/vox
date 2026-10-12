@@ -21,33 +21,51 @@ const BUILDER_ROWS: readonly ApiRow[] = [
 
 const INSTANCE_ROWS: readonly ApiRow[] = [
   {
-    description: "Tagged templates for every registered language, plus vox.any.",
-    name: "vox",
+    description: "Tagged templates for every registered language, plus phrase.any.",
+    name: "phrase",
     type: "Translate & { any }",
   },
   {
     description: "Adds a translation and returns the chain of the remaining languages.",
-    name: "vox[language]",
+    name: "phrase[language]",
     type: "(template, ...values) => VoxPhrase | Translate",
   },
   {
     description: "Closes the chain: the languages that are still missing render this translation.",
-    name: "vox.fallback(language?)",
+    name: "phrase.fallback(language?)",
     type: "(language?) => VoxPhrase",
   },
   {
     description: "A phrase that renders the same text in every language.",
-    name: "vox.any",
+    name: "phrase.any",
     type: "(template, ...values) => VoxPhrase",
   },
   {
     description:
-      "t(phrase) renders a phrase in the current language; the component re-renders on change.",
-    name: "useVox()",
-    type: "() => { t, language }",
+      "vox(phrase) renders a ready phrase in the current language and re-renders the component on every change.",
+    name: "useVox() → vox",
+    type: "(phrase) => ReactNode",
   },
   {
-    description: "Current language and its setter, straight from the store.",
+    description:
+      "The localizer also carries the phrase chain: it renders as soon as every language is covered.",
+    name: "useVox() → vox[language]",
+    type: "(template, ...values) => ReactNode | Translate",
+  },
+  {
+    description:
+      "Closes the in-place chain: the languages that are missing render this translation.",
+    name: "useVox() → vox.fallback(language?)",
+    type: "(language?) => ReactNode",
+  },
+  {
+    description: "Language-agnostic text, rendered with the helpers of the current language.",
+    name: "useVox() → vox.any",
+    type: "(template, ...values) => ReactNode",
+  },
+  {
+    description:
+      "Current language and its setter, straight from the store. useVox() also returns the current language.",
     name: "useLanguage()",
     type: "() => [language, setLanguage]",
   },
@@ -71,7 +89,7 @@ const INSTANCE_ROWS: readonly ApiRow[] = [
 
 const TYPE_ROWS: readonly ApiRow[] = [
   {
-    description: "A fully resolved phrase — the only argument t() accepts.",
+    description: "A fully resolved phrase — the data vox() renders.",
     name: "VoxPhrase",
     type: '{ __brand: "VoxPhrase" }',
   },
@@ -82,9 +100,15 @@ const TYPE_ROWS: readonly ApiRow[] = [
     type: "add / init",
   },
   {
-    description: "The object returned by init(): vox, the hooks and the store.",
+    description: "The object returned by init(): phrase, the hooks and the store.",
     name: "VoxInstance",
-    type: "vox / hooks / store",
+    type: "phrase / hooks / store",
+  },
+  {
+    description:
+      "The localizer from useVox(): renders a ready phrase and carries the same chain, with ReactNode as the terminal.",
+    name: "VoxTranslate",
+    type: "(phrase) & Translate<…, ReactNode>",
   },
   {
     description: "Options of a single language.",

@@ -1,11 +1,13 @@
 import { AnyDemo } from "@/components/demo/any-demo";
 import { FallbackDemo } from "@/components/demo/fallback-demo";
+import { InlineDemo } from "@/components/demo/inline-demo";
 import { LanguageSwitcher } from "@/components/demo/language-switcher";
 import { PhraseDemo } from "@/components/demo/phrase-demo";
 import { PluralDemo } from "@/components/demo/plural-demo";
 import { Demo } from "@/components/docs/demo";
 import anyDemoSource from "@/components/demo/any-demo.tsx?highlight";
 import fallbackDemoSource from "@/components/demo/fallback-demo.tsx?highlight";
+import inlineDemoSource from "@/components/demo/inline-demo.tsx?highlight";
 import phraseDemoSource from "@/components/demo/phrase-demo.tsx?highlight";
 import pluralDemoSource from "@/components/demo/plural-demo.tsx?highlight";
 
@@ -28,6 +30,9 @@ export function Playground() {
         </Demo>
         <Demo note="helpers run at render time" source={pluralDemoSource}>
           <PluralDemo />
+        </Demo>
+        <Demo note="localized on the spot, no phrase" source={inlineDemoSource}>
+          <InlineDemo />
         </Demo>
         <div className="grid gap-5 lg:grid-cols-2">
           <Demo note="for missing translations" source={fallbackDemoSource}>

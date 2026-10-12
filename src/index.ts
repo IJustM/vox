@@ -10,4 +10,5 @@ export type {
   VoxInstance,
   VoxLanguageStore,
   VoxPhrase,
+  VoxTranslate,
 } from "./types";

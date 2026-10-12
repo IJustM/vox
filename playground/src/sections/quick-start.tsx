@@ -32,9 +32,15 @@ export function QuickStart() {
         </div>
         <Prose>
           <p>
-            <InlineCode>vox.en</InlineCode> is a tag function: it adds the English template to the
-            chain and returns the languages that are still missing. Interpolations may be strings,
-            numbers, or functions that receive the helpers of the language being rendered.
+            <InlineCode>phrase.en</InlineCode> is a tag function: it adds the English template to
+            the chain and returns the languages that are still missing. Interpolations may be
+            strings, numbers, or functions that receive the helpers of the language being rendered.
+          </p>
+          <p>
+            Inside a component the hook hands you the localizer:{" "}
+            <InlineCode>vox(phrase)</InlineCode> renders a ready phrase, and the same chain works in
+            place — <InlineCode>vox.en`Hello`.ru`Привет`</InlineCode> renders as soon as every
+            language is covered or <InlineCode>fallback()</InlineCode> closes it.
           </p>
         </Prose>
         <CodeBlock source={appSource} />
