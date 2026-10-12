@@ -9,7 +9,7 @@ export function Inbox() {
     <p>
       {vox(
         phrase.en`You have ${COUNT} ${(h) => h.plural(COUNT, "like", "likes")}`
-          .ru`У вас ${COUNT} ${(h) => h.plural(COUNT, "лайк", "лайка", "лайков")}`
+          .ru`У вас ${COUNT} ${(h) => h.plural(COUNT, ["лайк", "лайка", "лайков"])}`
           .zh`你有 ${COUNT} 个赞`,
       )}
     </p>

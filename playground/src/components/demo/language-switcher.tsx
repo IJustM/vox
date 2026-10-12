@@ -1,17 +1,18 @@
 import { Languages } from "lucide-react";
-import { useLanguage } from "@/i18n";
+import { useLanguage, useVox } from "@/i18n";
 import { cn } from "@/lib/utils";
 
 const LANGUAGES = ["en", "ru", "zh"] as const;
 
 export function LanguageSwitcher() {
+  const { vox } = useVox();
   const [language, setLanguage] = useLanguage();
 
   return (
     <div className="flex flex-wrap items-center gap-3">
       <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
         <Languages aria-hidden className="size-3.5" />
-        Current language
+        {vox.en`Current language`.ru`Текущий язык`.zh`当前语言`}
       </span>
       <div className="inline-flex rounded-lg border border-border bg-card p-0.5">
         {LANGUAGES.map((item) => (

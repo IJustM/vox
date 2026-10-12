@@ -1,7 +1,6 @@
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { GithubMark } from "@/components/icons/github-mark";
 import { InstallCommand } from "@/components/docs/install-command";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { REPOSITORY_URL } from "@/site-nav";
 
@@ -10,14 +9,7 @@ export function Hero() {
     <section className="relative overflow-hidden pt-14 pb-16 sm:pt-20 sm:pb-20" id="top">
       <div aria-hidden className="vox-glow pointer-events-none absolute inset-x-0 -top-32 h-96" />
       <div className="relative mx-auto max-w-3xl text-center">
-        <div className="vox-reveal flex justify-center">
-          <Badge variant="primary">
-            <Sparkles aria-hidden className="size-3" />
-            React 18 · 19 — types included
-          </Badge>
-        </div>
-
-        <h1 className="vox-reveal mt-5 text-4xl font-semibold tracking-tight text-balance [animation-delay:60ms] sm:text-5xl">
+        <h1 className="vox-reveal text-4xl font-semibold tracking-tight text-balance [animation-delay:60ms] sm:text-5xl">
           Localization that{" "}
           <span className="bg-gradient-to-r from-primary to-cyan-400 bg-clip-text text-transparent">
             compiles
@@ -31,7 +23,7 @@ export function Hero() {
         </p>
 
         <div className="vox-reveal mt-8 flex flex-col items-center gap-5 [animation-delay:180ms]">
-          <InstallCommand command="pnpm add vox" />
+          <InstallCommand />
           <div className="flex flex-wrap items-center justify-center gap-2">
             <Button asChild size="lg">
               <a href="#playground">

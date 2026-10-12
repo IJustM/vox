@@ -2,6 +2,7 @@ import { Code2, Eye } from "lucide-react";
 import type { ReactNode } from "react";
 import { CodeBlock, type CodeSource } from "@/components/docs/code-block";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useVox } from "@/i18n";
 import { cn } from "@/lib/utils";
 
 export interface DemoProps {
@@ -16,6 +17,8 @@ export interface DemoProps {
  * Исходник импортируется из того же файла через `?highlight`, поэтому не расходится с демо.
  */
 export function Demo({ children, className, note, source }: DemoProps) {
+  const { vox } = useVox();
+
   return (
     <Tabs
       className={cn("overflow-hidden rounded-xl border border-border bg-card", className)}
@@ -25,11 +28,11 @@ export function Demo({ children, className, note, source }: DemoProps) {
         <TabsList>
           <TabsTrigger value="preview">
             <Eye />
-            Preview
+            {vox.en`Preview`.ru`Превью`.zh`预览`}
           </TabsTrigger>
           <TabsTrigger value="code">
             <Code2 />
-            Code
+            {vox.en`Code`.ru`Код`.zh`代码`}
           </TabsTrigger>
         </TabsList>
         {note !== undefined && <p className="text-xs text-muted-foreground">{note}</p>}

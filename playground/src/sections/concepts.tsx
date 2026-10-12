@@ -1,8 +1,6 @@
 import { CodeBlock } from "@/components/docs/code-block";
 import { InlineCode, Prose } from "@/components/docs/section";
 import { Card, CardContent } from "@/components/ui/card";
-import hooksSource from "../snippets/hooks-usage.tsx?highlight";
-import storeSource from "../snippets/store-usage.ts?highlight";
 import typingSource from "../snippets/typing.ts?highlight";
 
 const RESOLUTION_STEPS = [
@@ -54,7 +52,7 @@ export function Concepts() {
         <h3 className="text-lg font-medium">How a language is picked</h3>
         <Prose>
           <p>
-            For a given current language, <InlineCode>t()</InlineCode> renders the first available
+            For a given current language, <InlineCode>vox()</InlineCode> renders the first available
             variant in this order:
           </p>
         </Prose>
@@ -82,22 +80,6 @@ export function Concepts() {
             .
           </p>
         </Prose>
-      </article>
-
-      <article className="space-y-4">
-        <h3 className="text-lg font-medium">The language store</h3>
-        <Prose>
-          <p>
-            The current language is kept outside React: one store per{" "}
-            <InlineCode>createVoxBuilder()</InlineCode> instance, created once and shared by every
-            component. That makes it safe to call from a router, a settings menu or a test, and it
-            survives repeated <InlineCode>init()</InlineCode> calls.
-          </p>
-        </Prose>
-        <div className="grid gap-4 lg:grid-cols-2">
-          <CodeBlock source={storeSource} />
-          <CodeBlock source={hooksSource} />
-        </div>
       </article>
     </div>
   );

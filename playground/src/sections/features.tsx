@@ -3,7 +3,6 @@ import {
   Database,
   Hash,
   Languages,
-  Package,
   ShieldCheck,
   Zap,
   type LucideIcon,
@@ -52,12 +51,6 @@ const FEATURES: readonly Feature[] = [
       "The current language lives in a small store per builder instance. Read it anywhere, subscribe outside React, and it stays SSR-safe.",
     icon: Database,
     title: "State outside React",
-  },
-  {
-    description:
-      "One peer dependency: React. The rest is plain TypeScript — no runtime dependencies, no code generation, no message catalogues to load.",
-    icon: Package,
-    title: "Nothing to ship",
   },
 ];
 

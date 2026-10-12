@@ -1,4 +1,5 @@
 import { readFile } from "node:fs/promises";
+import { format } from "oxfmt";
 import { createHighlighter, type Highlighter } from "shiki";
 import type { Plugin } from "vite";
 
@@ -20,6 +21,17 @@ function detectLanguage(file: string): string {
   return (LANGS as readonly string[]).includes(extension) ? extension : "bash";
 }
 
+/** Код в блоках показываем ровно таким, каким его оставит oxfmt. */
+async function formatSource(file: string, source: string): Promise<string> {
+  try {
+    const result = await format(file, source);
+
+    return result.errors.length === 0 ? result.code : source;
+  } catch {
+    return source;
+  }
+}
+
 /**
  * Подсвечивает исходники на этапе сборки: `import source from "./demo.tsx?highlight"`
  * разворачивается в готовый HTML Shiki, поэтому сам Shiki в клиентский бандл не попадает.
@@ -38,7 +50,8 @@ export function shikiHighlight(): Plugin {
   }
 
   async function highlight(file: string): Promise<HighlightedCode> {
-    const code = await readFile(file, "utf8");
+    const source = await readFile(file, "utf8");
+    const code = await formatSource(file, source);
     const lang = detectLanguage(file);
     const cacheKey = `${file}:${lang}:${code}`;
 

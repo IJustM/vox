@@ -3,15 +3,16 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteSidebar } from "@/components/layout/site-sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { ApiReference } from "@/sections/api-reference";
+import { useVox } from "@/i18n";
 import { Concepts } from "@/sections/concepts";
-import { Development } from "@/sections/development";
 import { Features } from "@/sections/features";
 import { Hero } from "@/sections/hero";
 import { Playground } from "@/sections/playground";
 import { QuickStart } from "@/sections/quick-start";
 
 export function App() {
+  const { vox } = useVox();
+
   return (
     <TooltipProvider>
       <div className="min-h-dvh">
@@ -28,7 +29,9 @@ export function App() {
             <SiteSidebar />
             <div className="min-w-0">
               <Section
-                description="Switch the language and every phrase, fallback and helper follows the store."
+                description={vox.en`Switch the language — every phrase, fallback and helper follows the store.`
+                  .ru`Переключайте язык: фразы, fallback и хелперы следуют за стором.`
+                  .zh`切换语言——所有短语、回退和辅助函数都会跟随 store 变化。`}
                 id="playground"
                 title="Playground"
               >
@@ -57,22 +60,6 @@ export function App() {
                 title="Concepts"
               >
                 <Concepts />
-              </Section>
-              <Section
-                className="border-t border-border/70"
-                description="The complete surface: the builder, the instance and the exported types."
-                id="api"
-                title="API reference"
-              >
-                <ApiReference />
-              </Section>
-              <Section
-                className="border-t border-border/70"
-                description="Commands, tests, and how this page is built and deployed."
-                id="development"
-                title="Development"
-              >
-                <Development />
               </Section>
             </div>
           </div>

@@ -31,7 +31,9 @@ function App() {
 ## Installation
 
 ```sh
-pnpm add vox
+pnpm add vox     # pnpm
+npm install vox  # npm
+yarn add vox     # yarn
 ```
 
 React 18 or 19 is required as a peer dependency.
@@ -52,19 +54,26 @@ export const { phrase, useVox, useLanguage, setLanguage } = createVoxBuilder()
   })
   .add("ru", {
     helpers: {
-      plural: (count: number, one: string, few: string, many: string) => {
-        const mod10 = count % 10;
-        const mod100 = count % 100;
+      plural: (count: number, [one, few, many]: [string, string, string]) => {
+        const absCount = Math.abs(count);
 
-        if (mod10 === 1 && mod100 !== 11) {
-          return one;
+        if (absCount > 10 && absCount < 20) {
+          return many;
         }
 
-        if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) {
-          return few;
+        switch (absCount % 10) {
+          case 1: {
+            return one;
+          }
+          case 2:
+          case 3:
+          case 4: {
+            return few;
+          }
+          default: {
+            return many;
+          }
         }
-
-        return many;
       },
     },
   })
@@ -87,7 +96,7 @@ export function App() {
     <p>
       {vox(
         phrase.en`You have ${COUNT} ${(h) => h.plural(COUNT, "like", "likes")}`
-          .ru`У вас ${COUNT} ${(h) => h.plural(COUNT, "лайк", "лайка", "лайков")}`
+          .ru`У вас ${COUNT} ${(h) => h.plural(COUNT, ["лайк", "лайка", "лайков"])}`
           .zh`你有 ${COUNT} 个赞`,
       )}
     </p>

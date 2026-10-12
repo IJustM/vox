@@ -1,6 +1,12 @@
-import { expect, test } from "vitest";
+import { beforeEach, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
+import { setLanguage } from "@/i18n";
 import { App } from "./app";
+
+// Стор живёт на уровне модуля, поэтому каждый тест начинается с английского.
+beforeEach(() => {
+  setLanguage("en");
+});
 
 test("renders the landing page with the live playground", async () => {
   const screen = await render(<App />);

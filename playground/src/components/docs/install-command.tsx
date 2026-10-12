@@ -2,8 +2,20 @@ import { Check, Copy, Terminal } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
-export function InstallCommand({ className, command }: { className?: string; command: string }) {
+const MANAGER_IDS = ["pnpm", "npm", "yarn"] as const;
+
+type ManagerId = (typeof MANAGER_IDS)[number];
+
+const COMMANDS: Record<ManagerId, string> = {
+  npm: "npm install vox",
+  pnpm: "pnpm add vox",
+  yarn: "yarn add vox",
+};
+
+export function InstallCommand({ className }: { className?: string }) {
+  const [manager, setManager] = useState<ManagerId>("pnpm");
   const [copied, setCopied] = useState(false);
+  const command = COMMANDS[manager];
 
   async function handleCopy() {
     try {
@@ -20,15 +32,35 @@ export function InstallCommand({ className, command }: { className?: string; com
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-3 rounded-full border border-border bg-card py-1.5 pr-1.5 pl-4 shadow-sm",
+        "inline-flex flex-wrap items-center justify-center gap-2 rounded-2xl border border-border bg-card p-1.5 shadow-sm sm:rounded-full",
         className,
       )}
     >
-      <Terminal aria-hidden className="size-4 text-muted-foreground" />
-      <code className="font-mono text-sm text-foreground">{command}</code>
+      <Terminal aria-hidden className="ml-2 size-4 shrink-0 text-muted-foreground" />
+      <div className="inline-flex rounded-full bg-muted p-0.5">
+        {MANAGER_IDS.map((id) => (
+          <button
+            aria-pressed={id === manager}
+            className={cn(
+              "rounded-full px-2.5 py-1 text-xs font-medium transition-colors",
+              id === manager
+                ? "bg-card text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground",
+            )}
+            key={id}
+            onClick={() => {
+              setManager(id);
+            }}
+            type="button"
+          >
+            {id}
+          </button>
+        ))}
+      </div>
+      <code className="px-1 font-mono text-sm text-foreground">{command}</code>
       <button
         aria-label="Copy install command"
-        className="grid size-7 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+        className="mr-1 grid size-7 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
         onClick={handleCopy}
         type="button"
       >

@@ -18,10 +18,9 @@ export function FallbackDemo() {
         </div>
       </div>
       <p className="text-xs text-muted-foreground">
-        Neither chain is translated into Chinese. Switch the language above:{" "}
-        <span className="font-mono">.fallback()</span> renders the{" "}
-        <span className="font-mono">defaultFallbackLanguage</span> (English, “Text”), while{" "}
-        <span className="font-mono">.fallback(&quot;ru&quot;)</span> keeps Russian — “Текст”.
+        {vox.en`Neither chain has a Chinese variant. Switch the language above: the first one falls back to defaultFallbackLanguage, the second keeps Russian.`
+          .ru`Ни у одной цепочки нет китайского варианта. Переключите язык выше: первая откатится к defaultFallbackLanguage, вторая останется на русском.`
+          .zh`这两条链都没有中文版本。切换上面的语言：第一条回退到 defaultFallbackLanguage，第二条保留俄语。`}
       </p>
     </div>
   );
