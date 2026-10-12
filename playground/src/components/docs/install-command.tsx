@@ -1,5 +1,7 @@
 import { Check, Copy, Terminal } from "lucide-react";
 import { useState } from "react";
+import { Tooltip } from "@/components/ui/tooltip";
+import { useVox } from "@/i18n";
 import { cn } from "@/lib/utils";
 
 const MANAGER_IDS = ["pnpm", "npm", "yarn"] as const;
@@ -13,9 +15,13 @@ const COMMANDS: Record<ManagerId, string> = {
 };
 
 export function InstallCommand({ className }: { className?: string }) {
+  const { vox } = useVox();
   const [manager, setManager] = useState<ManagerId>("pnpm");
   const [copied, setCopied] = useState(false);
   const command = COMMANDS[manager];
+  const label = copied
+    ? vox.en`Copied`.ru`Скопировано`.zh`已复制`
+    : vox.en`Copy`.ru`Копировать`.zh`复制`;
 
   async function handleCopy() {
     try {
@@ -58,14 +64,16 @@ export function InstallCommand({ className }: { className?: string }) {
         ))}
       </div>
       <code className="px-1 font-mono text-sm text-foreground">{command}</code>
-      <button
-        aria-label="Copy install command"
-        className="mr-1 grid size-7 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-        onClick={handleCopy}
-        type="button"
-      >
-        {copied ? <Check className="size-3.5 text-primary" /> : <Copy className="size-3.5" />}
-      </button>
+      <Tooltip label={label}>
+        <button
+          aria-label="Copy install command"
+          className="mr-1 grid size-7 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+          onClick={handleCopy}
+          type="button"
+        >
+          {copied ? <Check className="size-3.5 text-primary" /> : <Copy className="size-3.5" />}
+        </button>
+      </Tooltip>
     </div>
   );
 }

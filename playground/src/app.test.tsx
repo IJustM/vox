@@ -38,3 +38,12 @@ test("renders the highlighted source behind every demo", async () => {
   expect(highlighted?.getAttribute("style")).toContain("--shiki-dark");
   expect(highlighted?.textContent).toContain("phrase.en");
 });
+
+test("shows a tooltip on the install copy button", async () => {
+  const screen = await render(<App />);
+
+  await screen.getByRole("button", { name: "Copy install command" }).hover();
+
+  // Тултип рендерится в портал на document.body, поэтому ищем вне контейнера рендера.
+  await expect.poll(() => document.querySelector('[role="tooltip"]')?.textContent).toBe("Copy");
+});

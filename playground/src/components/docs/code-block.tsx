@@ -2,6 +2,7 @@ import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Tooltip } from "@/components/ui/tooltip";
+import { useVox } from "@/i18n";
 import { cn } from "@/lib/utils";
 
 export interface CodeSource {
@@ -35,7 +36,11 @@ export function CodeBlock({ className, showHeader = true, source }: CodeBlockPro
 }
 
 function CopyButton({ value }: { value: string }) {
+  const { vox } = useVox();
   const [copied, setCopied] = useState(false);
+  const label = copied
+    ? vox.en`Copied`.ru`Скопировано`.zh`已复制`
+    : vox.en`Copy`.ru`Копировать`.zh`复制`;
 
   async function handleCopy() {
     try {
@@ -50,7 +55,7 @@ function CopyButton({ value }: { value: string }) {
   }
 
   return (
-    <Tooltip label={copied ? "Copied" : "Copy"}>
+    <Tooltip label={label}>
       <Button
         aria-label="Copy code"
         className="size-7 text-muted-foreground"
